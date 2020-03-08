@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{CF538FF7-9CC1-4277-B354-77ADA026AE98}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeasureManagement.Tests.Domain", "Src\MeasureManagement.Tests.Domain\MeasureManagement.Tests.Domain.csproj", "{0A27F3A9-7B1B-44E6-B23D-E4B4D30D6641}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeasureUnitManagement.Tests.Domain", "Src\MeasureManagement.Tests.Domain\MeasureUnitManagement.Tests.Domain.csproj", "{0A27F3A9-7B1B-44E6-B23D-E4B4D30D6641}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasureUnitManagement", "Src\MeasureUnitManagement\MeasureUnitManagement.csproj", "{828B60C0-014B-4B4F-9BB9-A78EC6D83212}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeasureUnitManagement", "Src\MeasureUnitManagement\MeasureUnitManagement.csproj", "{828B60C0-014B-4B4F-9BB9-A78EC6D83212}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

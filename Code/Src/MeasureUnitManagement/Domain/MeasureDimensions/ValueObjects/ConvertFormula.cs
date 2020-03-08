@@ -1,4 +1,5 @@
-﻿using MeasureUnitManagement.Domain.Services.ExpressionEvaluator;
+﻿using MeasureUnitManagement.Domain.Exceptions;
+using MeasureUnitManagement.Domain.Services.ExpressionEvaluator;
 using MeasureUnitManagement.Infrastructure.Core;
 using System.Collections.Generic;
 
@@ -22,7 +23,38 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions.ValueObjects
         }
 
         private void GuardAgainstFormulaFormat(string formula)
-        { }
+        {
+            Stack<char> lastOpen = new Stack<char>();
+            foreach (var c in formula)
+            {
+                switch (c)
+                {
+                    case ')':
+                        if (lastOpen.Count == 0 || lastOpen.Pop() != '(')
+                            throw new ParenthesisAreNotBalanced(formula);
+                        break;
+                    case ']':
+                        if (lastOpen.Count == 0 || lastOpen.Pop() != '[')
+                            throw new ParenthesisAreNotBalanced(formula);
+                        break;
+                    case '}':
+                        if (lastOpen.Count == 0 || lastOpen.Pop() != '{')
+                            throw new ParenthesisAreNotBalanced(formula);
+                        break;
+                    case '(':
+                        lastOpen.Push(c);
+                        break;
+                    case '[':
+                        lastOpen.Push(c);
+                        break;
+                    case '{':
+                        lastOpen.Push(c);
+                        break;
+                }
+            }
+            if (lastOpen.Count != 0)
+                throw new ParenthesisAreNotBalanced(formula);
+        }
 
         protected override IEnumerable<object> GetAttributesToIncludeInEqualityCheck()
         {

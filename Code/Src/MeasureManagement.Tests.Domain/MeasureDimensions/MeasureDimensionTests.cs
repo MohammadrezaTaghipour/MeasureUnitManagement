@@ -229,6 +229,27 @@ namespace MeasureUnitManagement.Tests.Domain.MeasureDimensions
         }
 
         [Fact]
+        public void
+            for_measure_dimension_defining_new_coeffiecient_unit_should_throw_exception_when_formula_has_invliad_parenthesis_formart()
+        {
+            var basicUnit = new BasicMeasureUnitTestBuilder().BuildArg();
+
+            var formulatedUnitBuilder = new FormulatedMeasureUnitTestBuilder();
+            var farenheit = formulatedUnitBuilder
+                .WithConvertFormulaToBasicUnit("23 + ( (a+3)")
+                .BuildArg();
+
+            var dimension = new MeasureDimensionTestBuilder()
+                .WithBasicMeasureUnitArg(basicUnit)
+                .Build();
+
+            Action action = () => dimension.DefineFormulatedUnit(farenheit);
+
+            Check.ThatCode(action).Throws<ParenthesisAreNotBalanced>();
+        }
+
+
+        [Fact]
         public void measure_dimension_should_modify_formulated_units_properly()
         {
             var basicUnit = new BasicMeasureUnitTestBuilder().BuildArg();
@@ -334,10 +355,5 @@ namespace MeasureUnitManagement.Tests.Domain.MeasureDimensions
             Check.That(measuredValue).IsEqualTo(expected);
         }
 
-        [Fact]
-        public void measure_dimension_should_measure_formulated_units_to_coefficient_units_properly()
-        {
-
-        }
     }
 }
