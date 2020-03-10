@@ -48,9 +48,6 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions
             if (arg == null)
                 throw new ArgumentsForModifyingBasicMeasureUnitCannotBeNull();
 
-            if (BasicUnit == null)
-                return;
-
             BasicUnit.Modify(arg.Title, arg.TitleSlug);
         }
 
@@ -102,15 +99,15 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions
         }
 
         public double MeasureUnitsFor(MeasurementArg arg,
-            IFormulaExpressionEvluator expressionEvluator)
+            IFormulaExpressionEvluator expressionEvaluator)
         {
             var fromMeasureUnit = this.FindUnitFrom(arg.FromUnitSymbol);
             var toMeasureUnit = this.FindUnitFrom(arg.ToUnitSymbol);
 
-            double valueFromBasicUnit = this.MeasureToBasicUnit(fromMeasureUnit,
-                arg.FromValue, expressionEvluator);
+            var valueFromBasicUnit = this.MeasureToBasicUnit(fromMeasureUnit,
+                arg.FromValue, expressionEvaluator);
             var result = this.MeasureFromBasicUnit(toMeasureUnit, valueFromBasicUnit,
-                expressionEvluator);
+                expressionEvaluator);
             return result;
         }
 
@@ -129,31 +126,31 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions
         }
 
         private double MeasureFromBasicUnit(MeasureUnit unit, double value,
-            IFormulaExpressionEvluator expressionEvluator)
+            IFormulaExpressionEvluator expressionEvaluator)
         {
             if (unit is BasicMeasureUnit basicUnit)
                 return basicUnit.MesaureFromBasicUnit(value);
 
-            if (unit is CoefficientMeasureUnit coeffientUnit)
-                return coeffientUnit.MesaureFromBasicUnit(value);
+            if (unit is CoefficientMeasureUnit coefficientUnit)
+                return coefficientUnit.MesaureFromBasicUnit(value);
 
             if (unit is FormulatedMeasureUnit formulatedUnit)
-                return formulatedUnit.MesaureFromBasicUnit(value, expressionEvluator);
+                return formulatedUnit.MesaureFromBasicUnit(value, expressionEvaluator);
 
             throw new InvalidMeasureUnit($"type: {unit.GetType()}");
         }
 
         private double MeasureToBasicUnit(MeasureUnit unit, double value,
-            IFormulaExpressionEvluator expressionEvluator)
+            IFormulaExpressionEvluator expressionEvaluator)
         {
             if (unit is BasicMeasureUnit basicUnit)
                 return basicUnit.MesaureToBasicUnit(value);
 
-            if (unit is CoefficientMeasureUnit coeffientUnit)
-                return coeffientUnit.MesaureToBasicUnit(value);
+            if (unit is CoefficientMeasureUnit coefficientUnit)
+                return coefficientUnit.MesaureToBasicUnit(value);
 
             if (unit is FormulatedMeasureUnit formulatedUnit)
-                return formulatedUnit.MesaureToBasicUnit(value, expressionEvluator);
+                return formulatedUnit.MesaureToBasicUnit(value, expressionEvaluator);
 
             throw new InvalidMeasureUnit($"type: {unit.GetType()}");
         }
