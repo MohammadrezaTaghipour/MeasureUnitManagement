@@ -1,4 +1,4 @@
-# MeasureUnitManagement
+# Measure Unit Management
 A domain-driven design sample project for measureing units in desired dimensions 
 
 # Getting Started
