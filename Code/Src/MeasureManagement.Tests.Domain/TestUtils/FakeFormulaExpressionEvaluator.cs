@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MeasureManagement.Tests.Domain.TestUtils
 {
-    public class FakeFormulaExpressionEvluator : IFormulaExpressionEvluator
+    public class FakeFormulaExpressionEvaluator : IFormulaExpressionEvaluator
     {
         private static string[] _operators = { "-", "+", "/", "*", "^" };
         private static Func<double, double, double>[] _operations =

@@ -99,7 +99,7 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions
         }
 
         public double MeasureUnitsFor(MeasurementArg arg,
-            IFormulaExpressionEvluator expressionEvaluator)
+            IFormulaExpressionEvaluator expressionEvaluator)
         {
             var fromMeasureUnit = this.FindUnitFrom(arg.FromUnitSymbol);
             var toMeasureUnit = this.FindUnitFrom(arg.ToUnitSymbol);
@@ -126,7 +126,7 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions
         }
 
         private double MeasureFromBasicUnit(MeasureUnit unit, double value,
-            IFormulaExpressionEvluator expressionEvaluator)
+            IFormulaExpressionEvaluator expressionEvaluator)
         {
             if (unit is BasicMeasureUnit basicUnit)
                 return basicUnit.MesaureFromBasicUnit(value);
@@ -141,7 +141,7 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions
         }
 
         private double MeasureToBasicUnit(MeasureUnit unit, double value,
-            IFormulaExpressionEvluator expressionEvaluator)
+            IFormulaExpressionEvaluator expressionEvaluator)
         {
             if (unit is BasicMeasureUnit basicUnit)
                 return basicUnit.MesaureToBasicUnit(value);

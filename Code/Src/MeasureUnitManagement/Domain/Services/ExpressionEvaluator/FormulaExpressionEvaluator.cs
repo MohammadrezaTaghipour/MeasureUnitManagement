@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MeasureUnitManagement.Domain.Services.ExpressionEvaluator
 {
-    public class FormulaExpressionEvaluator : IFormulaExpressionEvluator
+    public class FormulaExpressionEvaluator : IFormulaExpressionEvaluator
     {
         public double Evaluate(string expression)
         {

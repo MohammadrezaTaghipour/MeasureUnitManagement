@@ -1,5 +1,7 @@
 ﻿using MeasureUnitManagement.Application.Commands;
 using MeasureUnitManagement.Domain.MeasureDimensions;
+using MeasureUnitManagement.Domain.MeasureDimensions.Args;
+using MeasureUnitManagement.Domain.Services.ExpressionEvaluator;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,16 +15,20 @@ namespace MeasureUnitManagement.Application.Handlers
         IRequestHandler<AddCoefficientMeasureUnit, long>,
         IRequestHandler<ModifyCoefficientMeasureUnit, long>,
         IRequestHandler<AddFormulatedMeasureUnit, long>,
-        IRequestHandler<ModifyFormulatedMeasureUnit, long>
+        IRequestHandler<ModifyFormulatedMeasureUnit, long>,
+        IRequestHandler<MeasureUnitCommand, double>
     {
         private readonly IMeasureDimensionRepository _measureDimensionRepository;
         private readonly IMeasureDimensionArgFactory _measureDimensionArgFactory;
+        private readonly IFormulaExpressionEvaluator _formulaExpressionEvaluator;
 
         public MeasureDimensionCommandHandler(IMeasureDimensionRepository measureDimensionRepository,
-            IMeasureDimensionArgFactory measureDimensionArgFactory)
+            IMeasureDimensionArgFactory measureDimensionArgFactory,
+            IFormulaExpressionEvaluator formulaExpressionEvaluator)
         {
             _measureDimensionRepository = measureDimensionRepository;
             _measureDimensionArgFactory = measureDimensionArgFactory;
+            _formulaExpressionEvaluator = formulaExpressionEvaluator;
         }
 
         public async Task<long> Handle(CreateMeasureDimensionCommand request, CancellationToken cancellationToken)
@@ -79,6 +85,19 @@ namespace MeasureUnitManagement.Application.Handlers
             dimension.ModifyFormulatedUnit(_measureDimensionArgFactory.MapToArg(request));
             await _measureDimensionRepository.Add(dimension, cancellationToken);
             return dimension.Id;
+        }
+
+        public async Task<double> Handle(MeasureUnitCommand request, CancellationToken cancellationToken)
+        {
+            var dimension = await _measureDimensionRepository.GetById(request.DimensionId);
+            var arg = new MeasurementArg
+            {
+                FromValue = request.Value,
+                FromUnitSymbol = new Symbol(request.FromUnitSymbol),
+                ToUnitSymbol = new Symbol(request.ToUnitSymbol)
+            };
+            var measureValue = dimension.MeasureUnitsFor(arg, _formulaExpressionEvaluator);
+            return measureValue;
         }
     }
 }

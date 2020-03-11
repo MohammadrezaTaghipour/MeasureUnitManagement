@@ -16,10 +16,10 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions.ValueObjects
         public string Formula { get; private set; }
 
         public double MeasureBy(double value,
-            IFormulaExpressionEvluator formulaExpressionEvluator)
+            IFormulaExpressionEvaluator formulaExpressionEvaluator)
         {
             string exp = Formula.Replace("a", value.ToString());
-            return formulaExpressionEvluator.Evaluate(exp);
+            return formulaExpressionEvaluator.Evaluate(exp);
         }
 
         private void GuardAgainstFormulaFormat(string formula)
