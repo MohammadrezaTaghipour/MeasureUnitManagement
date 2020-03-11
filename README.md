@@ -3,7 +3,7 @@ A domain-driven design sample project for measureing units in desired dimensions
 
 # Getting Started
 
-you need to have installed following requirements:
- . Visual Studio or Visual Studio Code
- . MongoDB
+you need to have installed following requirements: <br/>
+ . Visual Studio or Visual Studio Code <br/>
+ . MongoDB  <br/>
  
