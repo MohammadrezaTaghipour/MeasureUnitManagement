@@ -19,19 +19,20 @@ namespace MeasureUnitManagement
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(option => option.EnableEndpointRouting = false)
-                .SetCompatibilityVersion(CompatibilityVersion.Latest);
             services.AddControllers().AddNewtonsoftJson();
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Accounting Api", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Measure unit management Api", Version = "v1" });
                 c.TagActionsBy(a => a.ActionDescriptor.RouteValues["controller"].Replace("Query", ""));
             });
 
             services.AddDomainServices();
             services.AddRepositories();
             services.AddFactories();
+
+            services.AddMvc(option => option.EnableEndpointRouting = false)
+                .SetCompatibilityVersion(CompatibilityVersion.Latest);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

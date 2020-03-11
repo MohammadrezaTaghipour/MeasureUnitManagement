@@ -8,7 +8,7 @@ namespace MeasureUnitManagement.Controllers
 {
     [Route("api/[Controller]")]
     [ApiController]
-    public partial class MeasureDimensionsController : ControllerBase
+    public class MeasureDimensionsController : ControllerBase
     {
         private readonly IMediator _mediator;
 
