@@ -1,4 +1,4 @@
-name: MeasureUnitManagementWorkFlow
+name: CI-WorkFlow
 
 on: [push]
 
