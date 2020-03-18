@@ -15,6 +15,6 @@ jobs:
       with:
         dotnet-version: 3.0.100
     - name: Build with dotnet
-      run: dotnet build ./MeasureUnitManagement.sln --configuration Release
+      run: dotnet build ./src/MeasureUnitManagement.sln --configuration Release
     - name: Test with dotnet
-      run: dotnet test ./MeasureUnitManagement.sln --configuration Release
+      run: dotnet test ./src/MeasureUnitManagement.sln --configuration Release
