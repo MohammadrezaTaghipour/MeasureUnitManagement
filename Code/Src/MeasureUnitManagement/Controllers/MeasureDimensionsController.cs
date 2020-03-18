@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using MeasureUnitManagement.Application.Commands;
+using MeasureUnitManagement.Infrastructure.Attributes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -69,5 +70,20 @@ namespace MeasureUnitManagement.Controllers
             command.MeasureDimensionId = id;
             return _mediator.Send(command);
         }
+
+        [HttpGet]
+        [Route("{id}/from/{fromUnitSymbol}/to/{toUnitSymbol}/{value}")]
+        public Task<double> Get(long id, string fromUnitSymbol, string toUnitSymbol, double value)
+        {
+            var command = new MeasureUnitCommand
+            {
+                DimensionId = id,
+                Value = value,
+                FromUnitSymbol = fromUnitSymbol,
+                ToUnitSymbol = toUnitSymbol
+            };
+            return _mediator.Send(command);
+        }
+
     }
 }

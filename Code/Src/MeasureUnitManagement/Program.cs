@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace MeasureUnitManagement
 {
@@ -13,6 +8,7 @@ namespace MeasureUnitManagement
     {
         public static void Main(string[] args)
         {
+            ConfigureLogger();
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -20,7 +16,17 @@ namespace MeasureUnitManagement
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder
+                        .UseStartup<Startup>()
+                        .UseSerilog();
                 });
+
+        public static void ConfigureLogger()
+        {
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .CreateLogger();
+        }
     }
 }

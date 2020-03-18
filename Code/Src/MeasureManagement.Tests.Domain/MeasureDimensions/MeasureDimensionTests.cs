@@ -14,11 +14,11 @@ namespace MeasureUnitManagement.Tests.Domain.MeasureDimensions
 {
     public class MeasureDimensionTests
     {
-        private readonly IFormulaExpressionEvluator _formulaExpressionEvluator;
+        private readonly IFormulaExpressionEvaluator _formulaExpressionEvaluator;
 
         public MeasureDimensionTests()
         {
-            _formulaExpressionEvluator = Substitute.For<IFormulaExpressionEvluator>();
+            _formulaExpressionEvaluator = Substitute.For<IFormulaExpressionEvaluator>();
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace MeasureUnitManagement.Tests.Domain.MeasureDimensions
             var expected = 22.5;
 
             var mesaureValue = dimension
-                .MeasureUnitsFor(arg, _formulaExpressionEvluator);
+                .MeasureUnitsFor(arg, _formulaExpressionEvaluator);
 
             Check.That(mesaureValue).IsEqualTo(expected);
         }
@@ -197,7 +197,7 @@ namespace MeasureUnitManagement.Tests.Domain.MeasureDimensions
 
             var expected = 1000000;
 
-            var measuredValue = dimension.MeasureUnitsFor(arg, _formulaExpressionEvluator);
+            var measuredValue = dimension.MeasureUnitsFor(arg, _formulaExpressionEvaluator);
 
             Check.That(measuredValue).IsEqualTo(expected);
         }

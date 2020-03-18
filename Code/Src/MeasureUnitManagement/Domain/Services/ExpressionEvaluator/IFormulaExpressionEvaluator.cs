@@ -3,8 +3,9 @@ using System;
 
 namespace MeasureUnitManagement.Domain.Services.ExpressionEvaluator
 {
-    public interface IFormulaExpressionEvluator : IDomainService
+    public interface IFormulaExpressionEvaluator : IDomainService
     {
         double Evaluate(string expression);
     }
 }
+ 

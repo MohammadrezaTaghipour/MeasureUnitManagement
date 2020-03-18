@@ -7,12 +7,12 @@ namespace MeasureUnitManagement.Domain.Services
 {
     public class MeasureDimensionService : IMeasureDimensionService
     {
-        public MeasureDimensionService(IFormulaExpressionEvluator formulaExpressionEvluator)
+        public MeasureDimensionService(IFormulaExpressionEvaluator formulaExpressionEvaluator)
         {
-            this._formulaExpressionEvluator = formulaExpressionEvluator;
+            this._formulaExpressionEvaluator = formulaExpressionEvaluator;
         }
 
-        private readonly IFormulaExpressionEvluator _formulaExpressionEvluator;
+        private readonly IFormulaExpressionEvaluator _formulaExpressionEvaluator;
 
         public double MeasureFromBasicUnit(MeasureUnit unit, double value)
         {
@@ -23,7 +23,7 @@ namespace MeasureUnitManagement.Domain.Services
                 return coeffientUnit.MesaureFromBasicUnit(value);
 
             if (unit is FormulatedMeasureUnit formulatedUnit)
-                return formulatedUnit.MesaureFromBasicUnit(value, _formulaExpressionEvluator);
+                return formulatedUnit.MesaureFromBasicUnit(value, _formulaExpressionEvaluator);
 
             throw new InvalidMeasureUnit($"type: {unit.GetType()}");
         }
@@ -37,7 +37,7 @@ namespace MeasureUnitManagement.Domain.Services
                 return coeffientUnit.MesaureToBasicUnit(value);
 
             if (unit is FormulatedMeasureUnit formulatedUnit)
-                return formulatedUnit.MesaureToBasicUnit(value, _formulaExpressionEvluator);
+                return formulatedUnit.MesaureToBasicUnit(value, _formulaExpressionEvaluator);
 
             throw new InvalidMeasureUnit($"type: {unit.GetType()}");
         }
