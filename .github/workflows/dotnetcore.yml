@@ -1,25 +1,20 @@
-name: .NET Core
+name: ASP.NET Core CI
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [push]
 
 jobs:
   build_and_test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macOS-latest, ubuntu-latest, windows-latest]
+        os: [macOS-latest, ubuntu-latest, windows-2019]
     steps:
-    - name: Setup .NET Core if needed
-      uses: actions/setup-dotnet@v1.2.0
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.0.100
-      if: matrix.os == 'macOS-latest' || matrix.os == 'ubuntu-latest'
-    - uses: actions/checkout@v1
     - name: Build with dotnet
-      run: dotnet build ./src/Solution.sln --configuration Release
+      run: dotnet build ./MeasureUnitManagement.sln --configuration Release
     - name: Test with dotnet
-      run: dotnet test ./src/Solution.sln --configuration Release
+      run: dotnet test ./MeasureUnitManagement.sln --configuration Release
