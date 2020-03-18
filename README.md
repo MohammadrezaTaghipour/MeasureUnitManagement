@@ -7,3 +7,4 @@ you need to have installed following requirements: <br/>
  . Visual Studio or Visual Studio Code <br/>
  . MongoDB  <br/>
  
+https://github.com/MohammadrezaTaghipour/MeasureUnitManagement/workflows/MeasureUnitManagementWorkFlow/badge.svg
