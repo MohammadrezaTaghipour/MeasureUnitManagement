@@ -7,17 +7,19 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
+  build_and_test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macOS-latest, ubuntu-latest, windows-latest]
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+    - name: Setup .NET Core if needed
+      uses: actions/setup-dotnet@v1.2.0
       with:
-        dotnet-version: 3.1.101
+        dotnet-version: 3.0.100
+      if: matrix.os == 'macOS-latest' || matrix.os == 'ubuntu-latest'
+    - uses: actions/checkout@v1
     - name: Build with dotnet
-      run: dotnet build --configuration Release
-    - name: Run tests
-      run: dotnet vstest **/*Tests/*.csproj
+      run: dotnet build ./src/Solution.sln --configuration Release
+    - name: Test with dotnet
+      run: dotnet test ./src/Solution.sln --configuration Release
