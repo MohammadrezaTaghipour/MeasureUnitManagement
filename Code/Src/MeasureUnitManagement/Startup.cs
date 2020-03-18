@@ -3,6 +3,8 @@ using MeasureUnitManagement.Domain.MeasureDimensions;
 using MeasureUnitManagement.Domain.Services.ExpressionEvaluator;
 using MeasureUnitManagement.Infrastructure.DataAccess;
 using MeasureUnitManagement.Infrastructure.Persistence;
+using MeasureUnitManagement.Infrastructure.Persistence.Mappings;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -24,21 +26,24 @@ namespace MeasureUnitManagement
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddNewtonsoftJson();
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddMvcOptions(x =>
+                {
+                    x.EnableEndpointRouting = false;
+                });
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Measure unit management Api", Version = "v1" });
-                //c.TagActionsBy(a => a.ActionDescriptor.RouteValues["controller"].Replace("Query", ""));
             });
 
             services.AddMongoDB(this.Configuration);
             services.AddDomainServices();
             services.AddRepositories();
             services.AddFactories();
-
-            services.AddMvc(option => option.EnableEndpointRouting = false)
-                .SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services.AddCommandHandlers();
+            services.AddHealthChecks();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -49,7 +54,8 @@ namespace MeasureUnitManagement
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 c.RoutePrefix = string.Empty;
             });
-            app.UseMvcWithDefaultRoute();
+            app.UseHealthChecks("/health");
+            app.UseMvc();
         }
     }
 
@@ -73,6 +79,7 @@ namespace MeasureUnitManagement
         public static IServiceCollection AddMongoDB(this IServiceCollection services,
             IConfiguration configuration)
         {
+            new MeasureDimensionMappings().Register();
             services.AddTransient<IMongoDatabase>((s) =>
             {
                 var client = new MongoClient(configuration["MongoDB:ConnectionString"]);
@@ -81,6 +88,11 @@ namespace MeasureUnitManagement
             services.AddTransient<ISequenceIdGenerator, MongoSequenceIdGenerator>();
             services.AddTransient(typeof(IDocumentBasedRepository<,>), typeof(MongoRepository<,>));
             return services;
+        }
+
+        public static IServiceCollection AddCommandHandlers(this IServiceCollection services)
+        {
+            return services.AddMediatR(typeof(Startup).Assembly);
         }
     }
 }
