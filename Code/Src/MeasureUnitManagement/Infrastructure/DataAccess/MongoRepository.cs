@@ -24,6 +24,17 @@ namespace MeasureUnitManagement.Infrastructure.DataAccess
             return this.GetCollection().InsertOneAsync(aggregate, option, cancellationToken);
         }
 
+        public Task UpSert(TAggregate aggregate, CancellationToken cancellationToken)
+        {
+            var filter = new FilterDefinitionBuilder<TAggregate>().Eq(a => a.Id, aggregate.Id);
+            var options = new ReplaceOptions()
+            {
+                BypassDocumentValidation = true,
+                IsUpsert = true,
+            };
+            return GetCollection().ReplaceOneAsync(filter, aggregate, options, cancellationToken);
+        }
+
         public Task<TAggregate> GetById(TKey id)
         {
             var filter = new FilterDefinitionBuilder<TAggregate>().Eq(f => f.Id, id);

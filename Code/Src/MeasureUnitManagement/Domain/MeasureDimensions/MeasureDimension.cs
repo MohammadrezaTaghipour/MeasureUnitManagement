@@ -20,11 +20,11 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions
         public string Title { get; private set; }
         public BasicMeasureUnit BasicUnit { get; private set; }
 
-        private readonly List<CoefficientMeasureUnit> _coefficientUnits = new List<CoefficientMeasureUnit>();
-        public IReadOnlyList<CoefficientMeasureUnit> CoefficientUnits => _coefficientUnits.AsReadOnly();
+        private List<CoefficientMeasureUnit> _coefficientUnits = new List<CoefficientMeasureUnit>();
+        public IReadOnlyList<CoefficientMeasureUnit> CoefficientUnits => _coefficientUnits;
 
-        private readonly List<FormulatedMeasureUnit> _formulatedUnits = new List<FormulatedMeasureUnit>();
-        public IReadOnlyList<FormulatedMeasureUnit> FormulatedUnits => _formulatedUnits.AsReadOnly();
+        private List<FormulatedMeasureUnit> _formulatedUnits = new List<FormulatedMeasureUnit>();
+        public IReadOnlyList<FormulatedMeasureUnit> FormulatedUnits => _formulatedUnits;
 
         public static MeasureDimension Create(long id, string title)
         {
@@ -61,7 +61,7 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions
 
             var unit = CoefficientMeasureUnit.Create(arg.Id,
                 arg.Title, arg.TitleSlug, arg.RatioFromBasicMeasureUnit);
-            _coefficientUnits.Add(unit);
+            this._coefficientUnits.Add(unit);
         }
 
         public void ModifyCoefficientUnit(CoefficientMeasureUnitArg arg)

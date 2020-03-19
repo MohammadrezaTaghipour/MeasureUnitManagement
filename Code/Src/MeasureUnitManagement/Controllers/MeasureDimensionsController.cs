@@ -69,5 +69,22 @@ namespace MeasureUnitManagement.Controllers
             command.MeasureDimensionId = id;
             return _mediator.Send(command);
         }
+
+
+        [HttpGet]
+        [Route("{id}/from/{fromMeasureUnitSymbol}/to/{toMeasureUnitSymbol}/{value}")]
+        public Task<double> Get(long id, string fromMeasureUnitSymbol, string toMeasureUnitSymbol,
+            double value)
+        {
+            var command = new MeasureUnitCommand
+            {
+                DimensionId = id,
+                Value = value,
+                FromUnitSymbol = fromMeasureUnitSymbol,
+                ToUnitSymbol = toMeasureUnitSymbol
+            };
+            return _mediator.Send(command);
+        }
+
     }
 }

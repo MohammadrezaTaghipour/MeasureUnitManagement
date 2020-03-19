@@ -17,7 +17,7 @@ namespace MeasureUnitManagement.Infrastructure.Persistence
 
         public Task Add(MeasureDimension measureDimension, CancellationToken cancellationToken)
         {
-            return _repository.Add(measureDimension, cancellationToken);
+            return _repository.UpSert(measureDimension, cancellationToken);
         }
 
         public Task<MeasureDimension> GetById(long id)

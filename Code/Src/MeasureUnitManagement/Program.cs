@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
@@ -17,6 +18,13 @@ namespace MeasureUnitManagement
         {
             return WebHost.CreateDefaultBuilder(args)
                 .UseSerilog()
+                .ConfigureAppConfiguration((cntx, config) =>
+                {
+                    var env = cntx.HostingEnvironment.EnvironmentName;
+                    config.AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true);
+                    config.AddJsonFile($"appsettings.{env}.json", optional: false, reloadOnChange: true);
+                    config.AddJsonFile($"appsettings.{env}.json", optional: false, reloadOnChange: true);
+                })
                 .UseStartup<Startup>()
                 .UseKestrel();
         }

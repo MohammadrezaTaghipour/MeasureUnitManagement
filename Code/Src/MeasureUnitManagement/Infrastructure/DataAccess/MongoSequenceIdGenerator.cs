@@ -20,8 +20,9 @@ namespace MeasureUnitManagement.Infrastructure.DataAccess
             var lockObj = _locks.GetOrAdd(aggName, (a) => new object());
             lock (lockObj)
             {
-                var nextId = ReadLastReservedNumber(aggName).Result;
-                return Task.FromResult(nextId);
+                var lastId = ReadLastSequence(aggName).Result;
+                UpdateLastSequence(aggName, 1).Wait();
+                return Task.FromResult(++lastId);
             }
         }
 
@@ -30,12 +31,23 @@ namespace MeasureUnitManagement.Infrastructure.DataAccess
             return $"{typeof(TAggregate).Name}-SequenceId";
         }
 
-        private async Task<long> ReadLastReservedNumber(string aggregateName)
+        private async Task<long> ReadLastSequence(string aggregateName)
         {
             var result = await GetCollection()
                 .Find(a => a.AggregateName == aggregateName)
                 .FirstOrDefaultAsync();
             return result?.SeqId ?? 0;
+        }
+
+        public Task UpdateLastSequence(string aggregateName, int incrementSize)
+        {
+            var filter = new FilterDefinitionBuilder<SequenceId>().Eq(a => a.AggregateName, aggregateName);
+            var command = new UpdateDefinitionBuilder<SequenceId>().Inc(n => n.SeqId, incrementSize);
+            var options = new FindOneAndUpdateOptions<SequenceId>()
+            {
+                IsUpsert = true,
+            };
+            return GetCollection().FindOneAndUpdateAsync(filter, command, options);
         }
 
         private IMongoCollection<SequenceId> GetCollection()
