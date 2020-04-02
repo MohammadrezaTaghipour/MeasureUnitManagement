@@ -18,13 +18,9 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions
         }
 
         public string Title { get; private set; }
-        public BasicMeasureUnit BasicUnit { get; private set; }
 
-        private List<CoefficientMeasureUnit> _coefficientUnits = new List<CoefficientMeasureUnit>();
-        public IReadOnlyList<CoefficientMeasureUnit> CoefficientUnits => _coefficientUnits;
-
-        private List<FormulatedMeasureUnit> _formulatedUnits = new List<FormulatedMeasureUnit>();
-        public IReadOnlyList<FormulatedMeasureUnit> FormulatedUnits => _formulatedUnits;
+        private List<MeasureUnit> _measureUnits = new List<MeasureUnit>();
+        public IReadOnlyList<MeasureUnit> MeasureUnits => _measureUnits;
 
         public static MeasureDimension Create(long id, string title)
         {
@@ -37,10 +33,9 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions
             if (arg == null)
                 throw new ArgumentsForDefiningBasicMeasureUnitCannotBeNull();
 
-            if (BasicUnit != null)
-                return;
+            GaurdAgainstMultipleBasicUnitDefinition();
 
-            BasicUnit = BasicMeasureUnit.Create(arg.Id, arg.Title, arg.TitleSlug);
+            this._measureUnits.Add(BasicMeasureUnit.Create(arg.Id, arg.Title, arg.TitleSlug));
         }
 
         public void ModifyBasicMeasureUnit(BasicMeasureUnitArg arg)
@@ -48,7 +43,9 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions
             if (arg == null)
                 throw new ArgumentsForModifyingBasicMeasureUnitCannotBeNull();
 
-            BasicUnit.Modify(arg.Title, arg.TitleSlug);
+            var unit = (BasicMeasureUnit)this.FindUnitFrom(arg.Id);
+
+            unit.Modify(arg.Title, arg.TitleSlug);
         }
 
         public void DefineCoefficientUnit(CoefficientMeasureUnitArg arg)
@@ -56,12 +53,10 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions
             if (arg == null)
                 throw new ArgumentsForDefiningCoefficientMeasureUnitCannotBeNull();
 
-            if (this.BasicUnit == null)
-                throw new BasicMeasureUnitHasNotDefinedYetForThisDimension();
+            GaurdAgainstBasicUnitShouldBeDefinedBefore();
 
-            var unit = CoefficientMeasureUnit.Create(arg.Id,
-                arg.Title, arg.TitleSlug, arg.RatioFromBasicMeasureUnit);
-            this._coefficientUnits.Add(unit);
+            this._measureUnits.Add(CoefficientMeasureUnit.Create(arg.Id,
+                arg.Title, arg.TitleSlug, arg.RatioFromBasicMeasureUnit));
         }
 
         public void ModifyCoefficientUnit(CoefficientMeasureUnitArg arg)
@@ -69,7 +64,7 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions
             if (arg == null)
                 throw new ArgumentsForModifyingCoefficientMeasureUnitCannotBeNull();
 
-            var unit = _coefficientUnits.Find(u => u.Id == arg.Id);
+            var unit = (CoefficientMeasureUnit)this.FindUnitFrom(arg.Id);
 
             unit.Modify(arg.Title, arg.TitleSlug,
                 arg.RatioFromBasicMeasureUnit);
@@ -80,10 +75,11 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions
             if (arg == null)
                 throw new ArgumentsForDefiningFormulatedMeasureUnitCannotBeNull();
 
-            var unit = FormulatedMeasureUnit.Create(arg.Id, arg.Title,
+            GaurdAgainstBasicUnitShouldBeDefinedBefore();
+
+            this._measureUnits.Add(FormulatedMeasureUnit.Create(arg.Id, arg.Title,
                 arg.TitleSlug, new ConvertFormula(arg.ConvertFormulaFromBasicUnit.Formula),
-                new ConvertFormula(arg.ConvertFormulaToBasicUnit.Formula));
-            _formulatedUnits.Add(unit);
+                new ConvertFormula(arg.ConvertFormulaToBasicUnit.Formula)));
         }
 
         public void ModifyFormulatedUnit(FormulatedMeasureUnitArg arg)
@@ -91,7 +87,7 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions
             if (arg == null)
                 throw new ArgumentsForDefiningFormulatedMeasureUnitCannotBeNull();
 
-            var unit = _formulatedUnits.Find(u => u.Id == arg.Id);
+            var unit = (FormulatedMeasureUnit)this.FindUnitFrom(arg.Id);
 
             unit.Modify(arg.Title, arg.TitleSlug,
                 new ConvertFormula(arg.ConvertFormulaFromBasicUnit.Formula),
@@ -104,55 +100,31 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions
             var fromMeasureUnit = this.FindUnitFrom(arg.FromUnitSymbol);
             var toMeasureUnit = this.FindUnitFrom(arg.ToUnitSymbol);
 
-            var valueFromBasicUnit = this.MeasureToBasicUnit(fromMeasureUnit,
-                arg.FromValue, expressionEvaluator);
-            var result = this.MeasureFromBasicUnit(toMeasureUnit, valueFromBasicUnit,
+            var valueFromBasicUnit = fromMeasureUnit.MeasureToBasicUnit(arg.FromValue,
                 expressionEvaluator);
+            var result = toMeasureUnit.MeasureFromBasicUnit(valueFromBasicUnit, expressionEvaluator);
+
             return result;
+        }
+
+        private void GaurdAgainstMultipleBasicUnitDefinition()
+        {
+            if (this._measureUnits.OfType<BasicMeasureUnit>().Any())
+                throw new BasicMeasureUnitHasBennDefinedBeforeForThisDimension();
+        }
+
+        private void GaurdAgainstBasicUnitShouldBeDefinedBefore()
+        {
+            if (this._measureUnits.OfType<BasicMeasureUnit>().Any() == false)
+                throw new BasicMeasureUnitHasNotDefinedYetForThisDimension();
         }
 
         private MeasureUnit FindUnitFrom(Symbol symbol)
         {
-            if (BasicUnit.Id.Id == symbol.Id)
-                return BasicUnit;
-
-            if (CoefficientUnits.Any(u => u.Id == symbol))
-                return CoefficientUnits.First(u => u.Id.Id == symbol.Id);
-
-            if (FormulatedUnits.Any(u => u.Id == symbol))
-                return FormulatedUnits.First(u => u.Id.Id == symbol.Id);
+            if (this.MeasureUnits.Any(m => m.Id == symbol))
+                return this.MeasureUnits.First(m => m.Id == symbol);
 
             throw new InvalidMeasureUnit($"symbol: {symbol.Id}");
-        }
-
-        private double MeasureFromBasicUnit(MeasureUnit unit, double value,
-            IFormulaExpressionEvaluator expressionEvaluator)
-        {
-            if (unit is BasicMeasureUnit basicUnit)
-                return basicUnit.MesaureFromBasicUnit(value);
-
-            if (unit is CoefficientMeasureUnit coefficientUnit)
-                return coefficientUnit.MesaureFromBasicUnit(value);
-
-            if (unit is FormulatedMeasureUnit formulatedUnit)
-                return formulatedUnit.MesaureFromBasicUnit(value, expressionEvaluator);
-
-            throw new InvalidMeasureUnit($"type: {unit.GetType()}");
-        }
-
-        private double MeasureToBasicUnit(MeasureUnit unit, double value,
-            IFormulaExpressionEvaluator expressionEvaluator)
-        {
-            if (unit is BasicMeasureUnit basicUnit)
-                return basicUnit.MesaureToBasicUnit(value);
-
-            if (unit is CoefficientMeasureUnit coefficientUnit)
-                return coefficientUnit.MesaureToBasicUnit(value);
-
-            if (unit is FormulatedMeasureUnit formulatedUnit)
-                return formulatedUnit.MesaureToBasicUnit(value, expressionEvaluator);
-
-            throw new InvalidMeasureUnit($"type: {unit.GetType()}");
         }
     }
 }

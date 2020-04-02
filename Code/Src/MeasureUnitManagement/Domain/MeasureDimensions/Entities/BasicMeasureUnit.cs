@@ -1,4 +1,6 @@
-﻿namespace MeasureUnitManagement.Domain.MeasureDimensions.Entities
+﻿using MeasureUnitManagement.Domain.Services.ExpressionEvaluator;
+
+namespace MeasureUnitManagement.Domain.MeasureDimensions.Entities
 {
     public class BasicMeasureUnit : MeasureUnit
     {
@@ -12,19 +14,21 @@
             return basicUnit;
         }
 
+        public override double MeasureFromBasicUnit(double value,
+            IFormulaExpressionEvaluator expressionEvaluator = null)
+        {
+            return value * 1;
+        }
+
+        public override double MeasureToBasicUnit(double value,
+            IFormulaExpressionEvaluator expressionEvaluator = null)
+        {
+            return value * 1;
+        }
+
         public new void Modify(string title, string titleSlug)
         {
             base.Modify(title, titleSlug);
-        }
-
-        public double MesaureToBasicUnit(double value)
-        {
-            return value * 1;
-        }
-
-        public double MesaureFromBasicUnit(double value)
-        {
-            return value * 1;
         }
     }
 }

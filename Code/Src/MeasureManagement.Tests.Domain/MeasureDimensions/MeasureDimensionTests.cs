@@ -29,16 +29,15 @@ namespace MeasureUnitManagement.Tests.Domain.MeasureDimensions
                             .Build();
 
             var symbol = new Symbol(MeasureUnitSymbolTestData.MeterUnitSymbol);
-            var basicUnitArg = new BasicMeasureUnitTestBuilder()
+            var basicUnitArgBuilder = new BasicMeasureUnitTestBuilder()
                 .WithSymbol(symbol)
                 .WithTitle("متر")
-                .WithTitleSlug("Meter")
-                .BuildArg();
+                .WithTitleSlug("Meter");
 
-            dimension.DefineBasicMeasureUnit(basicUnitArg);
+            dimension.DefineBasicMeasureUnit(basicUnitArgBuilder.BuildArg());
 
-            Check.That(dimension.BasicUnit).Considering()
-                .All.Properties.IsEqualTo(basicUnitArg);
+            Check.That(dimension.MeasureUnits.First(c => c.Id == symbol))
+                .Considering().All.Properties.IsEqualTo(basicUnitArgBuilder.Build());
         }
 
         [Fact]
@@ -58,8 +57,8 @@ namespace MeasureUnitManagement.Tests.Domain.MeasureDimensions
 
             dimension.ModifyBasicMeasureUnit(modifArg);
 
-            Check.That(dimension.BasicUnit).Considering()
-                .All.Properties.IsEqualTo(modifArg);
+            Check.That(dimension.MeasureUnits.First(c => c.Id == symbol))
+                .Considering().All.Properties.IsEqualTo(basicUnitBuilder.Build());
         }
 
         [Fact]
@@ -86,10 +85,10 @@ namespace MeasureUnitManagement.Tests.Domain.MeasureDimensions
 
             var expected = 22.5;
 
-            var mesaureValue = dimension
+            var MeasureValue = dimension
                 .MeasureUnitsFor(arg, _formulaExpressionEvaluator);
 
-            Check.That(mesaureValue).IsEqualTo(expected);
+            Check.That(MeasureValue).IsEqualTo(expected);
         }
 
         [Fact]
@@ -132,7 +131,7 @@ namespace MeasureUnitManagement.Tests.Domain.MeasureDimensions
 
             dimension.DefineCoefficientUnit(centiMeter);
 
-            Check.That(dimension.CoefficientUnits.First(c => c.Id == centiMeter.Id))
+            Check.That(dimension.MeasureUnits.First(c => c.Id == centiMeter.Id))
                 .Considering().All.Properties.IsEqualTo(centiMeter);
         }
 
@@ -157,7 +156,7 @@ namespace MeasureUnitManagement.Tests.Domain.MeasureDimensions
 
             dimension.ModifyCoefficientUnit(arg);
 
-            Check.That(dimension.CoefficientUnits.First(c => c.Id == arg.Id))
+            Check.That(dimension.MeasureUnits.First(c => c.Id == arg.Id))
                 .Considering().All.Properties.IsEqualTo(arg);
         }
 
@@ -224,7 +223,7 @@ namespace MeasureUnitManagement.Tests.Domain.MeasureDimensions
 
             dimension.DefineFormulatedUnit(farenheit);
 
-            Check.That(dimension.FormulatedUnits.First(c => c.Id == farenheit.Id))
+            Check.That(dimension.MeasureUnits.First(c => c.Id == farenheit.Id))
                 .Considering().All.Properties.IsEqualTo(farenheit);
         }
 
@@ -270,7 +269,7 @@ namespace MeasureUnitManagement.Tests.Domain.MeasureDimensions
 
             dimension.ModifyFormulatedUnit(arg);
 
-            Check.That(dimension.FormulatedUnits.First(c => c.Id == arg.Id))
+            Check.That(dimension.MeasureUnits.First(c => c.Id == arg.Id))
                 .Considering().All.Properties.IsEqualTo(arg);
         }
 

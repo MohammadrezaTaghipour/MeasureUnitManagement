@@ -3,9 +3,6 @@ using MeasureUnitManagement.Domain.MeasureDimensions;
 using MeasureUnitManagement.Domain.MeasureDimensions.Args;
 using MeasureUnitManagement.Domain.MeasureDimensions.Entities;
 using MeasureUnitManagement.Domain.MeasureDimensions.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MeasureManagement.Tests.Domain.TestUtils
 {

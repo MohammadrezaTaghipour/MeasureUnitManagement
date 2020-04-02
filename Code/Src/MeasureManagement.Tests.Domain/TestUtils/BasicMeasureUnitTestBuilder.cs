@@ -2,9 +2,6 @@
 using MeasureUnitManagement.Domain.MeasureDimensions;
 using MeasureUnitManagement.Domain.MeasureDimensions.Args;
 using MeasureUnitManagement.Domain.MeasureDimensions.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MeasureManagement.Tests.Domain.TestUtils
 {
