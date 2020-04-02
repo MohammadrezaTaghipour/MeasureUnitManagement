@@ -35,16 +35,18 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions.Entities
             this.ConvertFormulaToBasicUnit = convertFormulaToBasicUnit;
         }
 
-        public double MesaureToBasicUnit(double value, IFormulaExpressionEvaluator evaluator)
+        public override double MeasureToBasicUnit(double value,
+            IFormulaExpressionEvaluator expressionEvaluator = null)
         {
             return this.ConvertFormulaToBasicUnit.MeasureBy(value,
-                evaluator);
+                expressionEvaluator);
         }
 
-        public double MesaureFromBasicUnit(double value, IFormulaExpressionEvaluator evaluator)
+        public override double MeasureFromBasicUnit(double value,
+            IFormulaExpressionEvaluator expressionEvaluator = null)
         {
             return this.ConvertFormulaFromBasicUnit.MeasureBy(value,
-                evaluator);
+                expressionEvaluator);
         }
 
     }

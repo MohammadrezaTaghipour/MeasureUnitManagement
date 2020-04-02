@@ -17,13 +17,13 @@ namespace MeasureUnitManagement.Domain.Services
         public double MeasureFromBasicUnit(MeasureUnit unit, double value)
         {
             if (unit is BasicMeasureUnit basicUnit)
-                return basicUnit.MesaureFromBasicUnit(value);
+                return basicUnit.MeasureFromBasicUnit(value);
 
             if (unit is CoefficientMeasureUnit coeffientUnit)
-                return coeffientUnit.MesaureFromBasicUnit(value);
+                return coeffientUnit.MeasureFromBasicUnit(value);
 
             if (unit is FormulatedMeasureUnit formulatedUnit)
-                return formulatedUnit.MesaureFromBasicUnit(value, _formulaExpressionEvaluator);
+                return formulatedUnit.MeasureFromBasicUnit(value, _formulaExpressionEvaluator);
 
             throw new InvalidMeasureUnit($"type: {unit.GetType()}");
         }
@@ -31,13 +31,13 @@ namespace MeasureUnitManagement.Domain.Services
         public double MeasureToBasicUnit(MeasureUnit unit, double value)
         {
             if (unit is BasicMeasureUnit basicUnit)
-                return basicUnit.MesaureToBasicUnit(value);
+                return basicUnit.MeasureToBasicUnit(value);
 
             if (unit is CoefficientMeasureUnit coeffientUnit)
-                return coeffientUnit.MesaureToBasicUnit(value);
+                return coeffientUnit.MeasureToBasicUnit(value);
 
             if (unit is FormulatedMeasureUnit formulatedUnit)
-                return formulatedUnit.MesaureToBasicUnit(value, _formulaExpressionEvaluator);
+                return formulatedUnit.MeasureToBasicUnit(value, _formulaExpressionEvaluator);
 
             throw new InvalidMeasureUnit($"type: {unit.GetType()}");
         }

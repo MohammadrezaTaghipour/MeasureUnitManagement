@@ -1,4 +1,5 @@
 ﻿using MeasureUnitManagement.Domain.MeasureDimensions.ValueObjects;
+using MeasureUnitManagement.Domain.Services.ExpressionEvaluator;
 using System;
 
 namespace MeasureUnitManagement.Domain.MeasureDimensions.Entities
@@ -29,12 +30,14 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions.Entities
             this.RatioFromBasicMeasureUnit = ratioFromBasicMeasureUnit;
         }
 
-        public double MesaureToBasicUnit(double value)
+        public override double MeasureToBasicUnit(double value,
+            IFormulaExpressionEvaluator expressionEvaluator = null)
         {
             return value * this.RatioFromBasicMeasureUnit.Value;
         }
 
-        public double MesaureFromBasicUnit(double value)
+        public override double MeasureFromBasicUnit(double value,
+            IFormulaExpressionEvaluator expressionEvaluator = null)
         {
             return value / this.RatioFromBasicMeasureUnit.Value;
         }

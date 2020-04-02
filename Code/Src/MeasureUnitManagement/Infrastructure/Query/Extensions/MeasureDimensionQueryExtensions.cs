@@ -1,9 +1,8 @@
 ﻿using MeasureUnitManagement.Domain.MeasureDimensions;
+using MeasureUnitManagement.Domain.MeasureDimensions.Entities;
 using MeasureUnitManagement.Infrastructure.Query.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace MeasureUnitManagement.Infrastructure.Query.Extensions
 {
@@ -17,19 +16,21 @@ namespace MeasureUnitManagement.Infrastructure.Query.Extensions
                 Title = measureDimension.Title,
             };
 
-            if (measureDimension.BasicUnit != null)
+            var basicUnit = measureDimension.MeasureUnits.OfType<BasicMeasureUnit>().FirstOrDefault();
+            if (basicUnit != null)
             {
                 dimension.BasicUnit = new BasicMeasureUnitResponse
                 {
-                    Symbol = measureDimension?.BasicUnit?.Id?.Id,
-                    Title = measureDimension?.BasicUnit?.Title,
-                    TitleSlug = measureDimension?.BasicUnit?.TitleSlug
+                    Symbol = basicUnit.Id.Id,
+                    Title = basicUnit.Title,
+                    TitleSlug = basicUnit.TitleSlug
                 };
             }
 
-            if (measureDimension.CoefficientUnits != null)
+            var coefficientUnits = measureDimension.MeasureUnits.OfType<CoefficientMeasureUnit>().ToList();
+            if (coefficientUnits != null && coefficientUnits.Any())
             {
-                dimension.CoefficientUnits = measureDimension.CoefficientUnits.Select(c => new CoefficientMeasureUnitResponse
+                dimension.CoefficientUnits = coefficientUnits.Select(c => new CoefficientMeasureUnitResponse
                 {
                     Symbol = c.Id.Id,
                     Title = c.Title,
@@ -38,9 +39,10 @@ namespace MeasureUnitManagement.Infrastructure.Query.Extensions
                 });
             }
 
-            if (measureDimension.FormulatedUnits != null)
+            var formulatedUnits = measureDimension.MeasureUnits.OfType<FormulatedMeasureUnit>().ToList();
+            if (formulatedUnits != null)
             {
-                dimension.FormulatedUnits = measureDimension.FormulatedUnits.Select(f => new FormulatedMeasureUnitResponse
+                dimension.FormulatedUnits = formulatedUnits.Select(f => new FormulatedMeasureUnitResponse
                 {
                     Symbol = f.Id.Id,
                     Title = f.Title,

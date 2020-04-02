@@ -1,4 +1,5 @@
-﻿using MeasureUnitManagement.Infrastructure.Core;
+﻿using MeasureUnitManagement.Domain.Services.ExpressionEvaluator;
+using MeasureUnitManagement.Infrastructure.Core;
 
 namespace MeasureUnitManagement.Domain.MeasureDimensions
 {
@@ -19,5 +20,11 @@ namespace MeasureUnitManagement.Domain.MeasureDimensions
             this.Title = title;
             this.TitleSlug = titleSlug;
         }
+
+        public abstract double MeasureToBasicUnit(double value,
+            IFormulaExpressionEvaluator expressionEvaluator = null);
+
+        public abstract double MeasureFromBasicUnit(double value,
+            IFormulaExpressionEvaluator expressionEvaluator = null);
     }
 }
